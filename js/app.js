@@ -71,6 +71,10 @@ let image1 = document.querySelector('section img:first-child');
 let image2 = document.querySelector('section img:nth-child(2)');
 console.log(pizzaContainer, resultButton, image1, image2);
 
+let clicks = 0;
+let maxClicks = 10;
+console.log('click tracking', {clicks, maxClicks});
+
 
 //constructor functions    src refers to the <img src="assets/images/brickOvenPizza.jpg" />
 function Pizza(name, src){
@@ -79,7 +83,7 @@ function Pizza(name, src){
   //times shown
   this.views = 0;
   //times clicked on
-  this.clicks = 0;
+  this.click = 0;
   //   As we create new instances of our pizza objects we can push those into array using the 'this' and the .push()
   // built in array method
   Pizza.allPizzasArray.push(this);
@@ -94,15 +98,76 @@ function getRandomNumber(){
 
 
 //function to render our pizzas
+function renderPizzas(){
+  let pizza1 = getRandomNumber();
+  let pizza2 = getRandomNumber();
+  // console.log(pizza1,pizza2);
+
+  while(pizza1 === pizza2){
+    pizza2 = getRandomNumber();
+  }
+  // console.log(pizza1,pizza2);
 
 
+  //capture some data about images so that we can track the data in our objects
+  //update the src for the new image to be seen after each click
+  //                     assets/images/brickOvenPizza.jpg
+  image1.src = Pizza.allPizzasArray[pizza1].src;
+  image2.src = Pizza.allPizzasArray[pizza2].src;
+
+  //update alt attribute
+  image1.alt = Pizza.allPizzasArray[pizza1].name;
+  image2.alt = Pizza.allPizzasArray[pizza2].name;
+  //times shown
+  Pizza.allPizzasArray[pizza1].views++;
+  Pizza.allPizzasArray[pizza2].views++;
+
+
+}//closes our renderPizza function
 
 //function to handle our clicks
+function handlePizzaClick(event){
+  console.log('we made it to the click: ', event);
+  if(event.target === pizzaContainer){
+    alert('please click on a pizza');
+  }
+  //how many time they vote total clicks
+  clicks++;
+  let clickPizza = event.target.alt;
+  console.log(clickPizza);
+  for(let i = 0; i < Pizza.allPizzasArray.length; i++){
+    if(clickPizza === Pizza.allPizzasArray[i].name){
+      //this.click from pizza object
+      // update the pizzas individual clicks
+      Pizza.allPizzasArray[i].click++;
+      break;
+    }
+  }
 
+
+
+  //do we have max attempts completed 10 votes
+  if(clicks === maxClicks){
+    pizzaContainer.removeEventListener('click', handlePizzaClick);
+    //enable the button to see the results
+    resultButton.addEventListener('click', renderResults);
+    pizzaContainer.className = 'no-voting';
+  } else {
+    renderPizzas();
+  }
+}
 
 
 //function for our render of results to a list
+function renderResults(){
+  let ul = document.querySelector('ul');
+  for(let i = 0; i < Pizza.allPizzasArray.length; i++){
+    let li = document.createElement('li');
+    li.textContent = `${Pizza.allPizzasArray[i].name} had ${Pizza.allPizzasArray[i].views} views and were clicked on ${Pizza.allPizzasArray[i].click} times`;
+    ul.appendChild(li);
+  }
 
+}
 
 
 //pizza ojects and call the constructor with the new operator
@@ -117,5 +182,8 @@ new Pizza('New York Thin', 'assets/images/newYorkPizza.jpg');
 new Pizza('Shot Gun Dans Pizza', 'assets/images/sgDansHtossedMeatLovPizza.jpg');
 
 //call all functions
+renderPizzas();
 
 //add our event listener to run our handleClick()
+pizzaContainer.addEventListener('click', handlePizzaClick);
+
