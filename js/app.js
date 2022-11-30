@@ -92,7 +92,8 @@ function renderResults(){
     li.textContent = `${Pizza.allPizzasArray[i].name} had ${Pizza.allPizzasArray[i].views} views and was clicked on ${Pizza.allPizzasArray[i].click} times`;
     ul.appendChild(li);
   }
-
+  //show our chart here
+  showResultChart();
 }
 
 
@@ -108,4 +109,33 @@ new Pizza('Shot Gun Dans Pizza', 'assets/images/sgDansHtossedMeatLovPizza.jpg');
 renderPizzas();
 
 pizzaContainer.addEventListener('click', handlePizzaClick);
+
+
+function showResultChart(){
+
+  // console.log('chart!!!!!!!!');
+  const ctx = document.getElementById('myChart');
+
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+      datasets: [{
+        label: '# of Votes',
+        data: [12, 19, 3, 5, 2, 3],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+
+
+}
+
 
