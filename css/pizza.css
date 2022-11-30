@@ -81,3 +81,18 @@ section + div {
   width: max-content;
 
 }
+footer {
+ 
+  margin-top: 200px;
+  
+ 
+}
+
+footer div {
+  height: 500px;
+  /* display: flex; */
+  /* justify-content: center; */
+  margin-left: 400px;
+  background-color: aliceblue;
+  width: 60%;
+}

@@ -7,11 +7,11 @@ let pizzaContainer = document.querySelector('section');
 let resultButton = document.querySelector('section + div');
 let image1 = document.querySelector('section img:first-child');
 let image2 = document.querySelector('section img:nth-child(2)');
-console.log(pizzaContainer, resultButton, image1, image2);
+// console.log(pizzaContainer, resultButton, image1, image2);
 
 let clicks = 0;
 let maxClicks = 10;
-console.log('click tracking', {clicks, maxClicks});
+// console.log('click tracking', {clicks, maxClicks});
 
 
 //constructor functions    src refers to the <img src="assets/images/brickOvenPizza.jpg" />
@@ -59,14 +59,14 @@ function renderPizzas(){
 
 
 function handlePizzaClick(event){
-  console.log('we made it to the click: ', event);
+  // console.log('we made it to the click: ', event);
   if(event.target === pizzaContainer){
     alert('please click on a pizza');
   }
 
   clicks++;
   let clickPizza = event.target.alt;
-  console.log(clickPizza);
+  // console.log(clickPizza);
   for(let i = 0; i < Pizza.allPizzasArray.length; i++){
     if(clickPizza === Pizza.allPizzasArray[i].name){
       Pizza.allPizzasArray[i].click++;
@@ -92,7 +92,8 @@ function renderResults(){
     li.textContent = `${Pizza.allPizzasArray[i].name} had ${Pizza.allPizzasArray[i].views} views and was clicked on ${Pizza.allPizzasArray[i].click} times`;
     ul.appendChild(li);
   }
-
+  //show our chart here
+  showResultChart();
 }
 
 
@@ -108,4 +109,65 @@ new Pizza('Shot Gun Dans Pizza', 'assets/images/sgDansHtossedMeatLovPizza.jpg');
 renderPizzas();
 
 pizzaContainer.addEventListener('click', handlePizzaClick);
+
+
+function showResultChart(){
+  // console.log(Pizza.allPizzasArray);
+  // console.log('chart!!!!!!!!');
+  let labels = [];
+  let voteCounts = [];
+  let showCounts = [];
+  let votePercentage = [];
+
+  for(let i = 0; i < Pizza.allPizzasArray.length; i++){
+    //four arrays to update
+    // console.log('TEST from array',Pizza.allPizzasArray[i].name);
+    labels[i] = Pizza.allPizzasArray[i].name;
+    voteCounts[i] = Pizza.allPizzasArray[i].click;
+    showCounts[i] = Pizza.allPizzasArray[i].views;
+    //                             views / clicks 100 / 30
+    votePercentage[i] = Math.floor(100 * voteCounts[i] /showCounts[i] );
+  }
+
+
+
+  console.log('labels',labels);
+  console.log('voteCounts',voteCounts);
+  console.log('showCounts', showCounts);
+  console.log('votePercentage',votePercentage);
+
+
+  const ctx = document.getElementById('myChart');
+
+  new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: 'Vote Count',
+        data: voteCounts,
+        backgroundColor: 'rgb(0,0,200)',
+      },
+      {
+        label: 'Times shown',
+        data: showCounts,
+        backgroundColor: 'rgb(200,0,0)',
+      },
+      {
+        label: 'Vote %',
+        data: votePercentage
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+
+
+}
+
 
