@@ -5,8 +5,15 @@ console.log('app js is connected');
 Pizza.allPizzasArray = [];
 let pizzaContainer = document.querySelector('section');
 let resultButton = document.querySelector('section + div');
-let image1 = document.querySelector('section img:first-child');
-let image2 = document.querySelector('section img:nth-child(2)');
+
+let imageElements = document.getElementsByTagName('img');
+console.log('image Elements ',imageElements);
+// [img1, img2]
+let image1 = 0;
+let image2 = 1;
+
+// let image1 = document.querySelector('section img:first-child');
+// let image2 = document.querySelector('section img:nth-child(2)');
 // console.log(pizzaContainer, resultButton, image1, image2);
 
 let clicks = 0;
@@ -55,25 +62,27 @@ function renderPizzas(){
   // while(pizza1 === pizza2){
   //   pizza2 = getRandomNumber();
   // }
-  while(pizza1 === image1 || pizza1 === image2){
+  // so if our new pizza matches last pizza or pizza current === other pizza current
+  while(pizza1 === image1 || pizza1 === pizza2){
     pizza1 = Math.floor(Math.random() * Pizza.allPizzasArray.length);
   }
-  while(pizza2 === image2 || pizza2 === image1){
+  while(pizza2 === image2 || pizza1 === pizza2){
     pizza2 = Math.floor(Math.random() * Pizza.allPizzasArray.length);
   }
   //set up a ref to the pizza index array
-  // image1 = pizza1;
-  // image2 = pizza2;
+  image1 = pizza1;
+  image2 = pizza2;
 
-  console.log('first pizza',pizza1);
-  console.log('second pizza',pizza2);
+  // console.log('first pizza',pizza1);
+  // console.log('second pizza',pizza2);
 
-  image1.src = Pizza.allPizzasArray[pizza1].src;
-  image2.src = Pizza.allPizzasArray[pizza2].src;
-
-
-  image1.alt = Pizza.allPizzasArray[pizza1].name;
-  image2.alt = Pizza.allPizzasArray[pizza2].name;
+  // image1.src = Pizza.allPizzasArray[pizza1].src;
+  // image2.src = Pizza.allPizzasArray[pizza2].src;
+  imageElements[0].src = Pizza.allPizzasArray[pizza1].src;
+  imageElements[1].src = Pizza.allPizzasArray[pizza2].src;
+  
+  imageElements[0].alt = Pizza.allPizzasArray[pizza1].name;
+  imageElements[1].alt = Pizza.allPizzasArray[pizza2].name;
 
   Pizza.allPizzasArray[pizza1].views++;
   Pizza.allPizzasArray[pizza2].views++;
