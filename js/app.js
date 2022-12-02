@@ -22,18 +22,72 @@ let maxClicks = 10;
 
 
 //constructor functions    src refers to the <img src="assets/images/brickOvenPizza.jpg" />
-function Pizza(name, src){
+function Pizza(name, src, views, click){
   this.name = name;
   this.src = src;
-  //times shown
-  this.views = 0;
-  //times clicked on
-  this.click = 0;
-  //   As we create new instances of our pizza objects we can push those into array using the 'this' and the .push()
-  // built in array method
+  if(views){
+    this.views = views;
+  } else {
+    this.views = 0;
+  }
+  if(click){
+    this.click = click;
+  } else {
+    this.click = 0;
+  }
+
+
+
   Pizza.allPizzasArray.push(this);
 
 }
+
+
+
+
+
+//we need a way to get stuff back from local storage add to our original objects and then render all rounds to vote again.
+let savedPizzaString = localStorage.getItem('savedPizza');
+console.log('pizza strings',savedPizzaString);
+//getItem from local storage
+
+// send those through our constructor function
+if(savedPizzaString){
+  let arrayOfNotPizzaObject  = JSON.parse(savedPizzaString);
+  console.log('objects that dont know they are pizzas?', arrayOfNotPizzaObject);
+  //once we have object we are going to run them through our constructor function so that they are Pizza objects.
+
+  for(let i = 0; i < arrayOfNotPizzaObject.length; i++){
+    new Pizza(
+      arrayOfNotPizzaObject[i].name,
+      arrayOfNotPizzaObject[i].src,
+      arrayOfNotPizzaObject[i].views,
+      arrayOfNotPizzaObject[i].click
+    );
+  }
+  console.log('sssssss',Pizza.allPizzasArray);
+} else {
+//calling the constructor function
+  new Pizza('Brick Oven Pizza', 'assets/images/brickOvenPizza.jpg');
+  new Pizza('Calzone', 'assets/images/calzonePizza.jpg');
+  new Pizza('Chicago Deep Dish', 'assets/images/chicagoPizza.jpg');
+  new Pizza('Chicago Pizza and Oven Grinder', 'assets/images/cpoGinderPizza.jpg');
+  new Pizza('Detroit Style', 'assets/images/detroitPizza.jpg');
+  new Pizza('Papa Vito\'s Thin', 'assets/images/mwDeluxePizzaThinCrust.jpg');
+  new Pizza('New York Thin', 'assets/images/newYorkPizza.jpg');
+  new Pizza('Shot Gun Dans Pizza', 'assets/images/sgDansHtossedMeatLovPizza.jpg');
+}
+
+
+
+
+
+
+
+
+
+
+
 // console.log('do we have Pizza? ',Pizza.allPizzasArray);
 
 // function helper for randomization
@@ -58,7 +112,7 @@ function renderPizzas(){
   // let pizza2 = getRandomNumber();
   let pizza1 = Math.floor(Math.random() * Pizza.allPizzasArray.length);
   let pizza2 = Math.floor(Math.random() * Pizza.allPizzasArray.length);
-  console.log(pizza1, pizza2);
+  // console.log(pizza1, pizza2);
   // while(pizza1 === pizza2){
   //   pizza2 = getRandomNumber();
   // }
@@ -80,7 +134,7 @@ function renderPizzas(){
   // image2.src = Pizza.allPizzasArray[pizza2].src;
   imageElements[0].src = Pizza.allPizzasArray[pizza1].src;
   imageElements[1].src = Pizza.allPizzasArray[pizza2].src;
-  
+
   imageElements[0].alt = Pizza.allPizzasArray[pizza1].name;
   imageElements[1].alt = Pizza.allPizzasArray[pizza2].name;
 
@@ -112,6 +166,10 @@ function handlePizzaClick(event){
     pizzaContainer.removeEventListener('click', handlePizzaClick);
     resultButton.addEventListener('click', renderResults);
     pizzaContainer.className = 'no-voting';
+
+    // console.log('do we have object numbers?',Pizza.allPizzasArray);
+    localStorage.setItem('savedPizza', JSON.stringify(Pizza.allPizzasArray));
+
   } else {
     renderPizzas();
   }
@@ -144,15 +202,6 @@ function renderResults(){
   showResultChart();
 }
 
-
-new Pizza('Brick Oven Pizza', 'assets/images/brickOvenPizza.jpg');
-new Pizza('Calzone', 'assets/images/calzonePizza.jpg');
-new Pizza('Chicago Deep Dish', 'assets/images/chicagoPizza.jpg');
-new Pizza('Chicago Pizza and Oven Grinder', 'assets/images/cpoGinderPizza.jpg');
-new Pizza('Detroit Style', 'assets/images/detroitPizza.jpg');
-new Pizza('Papa Vito\'s Thin', 'assets/images/mwDeluxePizzaThinCrust.jpg');
-new Pizza('New York Thin', 'assets/images/newYorkPizza.jpg');
-new Pizza('Shot Gun Dans Pizza', 'assets/images/sgDansHtossedMeatLovPizza.jpg');
 
 renderPizzas();
 
